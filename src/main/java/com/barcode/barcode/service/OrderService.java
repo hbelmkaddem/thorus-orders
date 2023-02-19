@@ -2,6 +2,8 @@ package com.barcode.barcode.service;
 
 import com.barcode.barcode.model.Orders;
 
+import java.util.List;
+
 public interface OrderService {
     String save(Orders orders);
 
@@ -10,4 +12,6 @@ public interface OrderService {
     Orders findById(String orderId);
 
     Orders update(Orders orders);
+
+    List<Orders> findAll();
 }

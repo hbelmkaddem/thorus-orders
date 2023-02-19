@@ -1,28 +1,31 @@
 package com.barcode.barcode.controller;
 
 import com.barcode.barcode.model.EmailDetails;
+import com.barcode.barcode.model.EmailResponse;
 import com.barcode.barcode.model.Orders;
+import com.barcode.barcode.model.Results;
 import com.barcode.barcode.service.EmailService;
+import com.barcode.barcode.service.OrderService;
 import com.barcode.barcode.service.impl.QRCodeGenerator;
 import com.barcode.barcode.service.impl.QRCodeServiceImpl;
-import com.barcode.barcode.service.OrderService;
 import com.google.zxing.WriterException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
-@RequestMapping("/barcodes")
+@RequestMapping("/v1/api/orders")
 public class OrderController {
     private final QRCodeServiceImpl qrCodeService;
     private final OrderService orderService;
     private final EmailService emailService;
     @Value("${passcode}")
     private String pass;
+    @Value("${url}")
+    private String url;
 
     public OrderController(QRCodeServiceImpl qrCodeService, OrderService orderService, EmailService emailService) {
         this.qrCodeService = qrCodeService;
@@ -30,51 +33,41 @@ public class OrderController {
         this.emailService = emailService;
     }
 
-    @PostMapping(value = "/", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getQRCode(@RequestBody String medium){
-        byte[] image = new byte[0];
-        try {
-            // Generate and Return Qr Code in Byte Array
-            image = QRCodeGenerator.getQRCodeImage(medium,250,250);
-        } catch (WriterException | IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
-    @PostMapping(value = "/read",consumes = {"multipart/form-data" })
-    public String read(@RequestBody() MultipartFile file) throws IOException {
-        return qrCodeService.readQRCode(file.getBytes());
-    }
-
-    @PostMapping(value = "/order", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getUserQRCode(@RequestBody Orders orders){
+    @PostMapping(value = "/save")
+    public Results getResultQRCode(@RequestBody Orders orders){
         String id = orderService.save(orders);
+        Results result=new Results();
         byte[] image = new byte[0];
         try {
-            // Generate and Return Qr Code in Byte Array
-            image = QRCodeGenerator.getQRCodeImage(id,150,150);
+            image = QRCodeGenerator.getQRCodeImage(url+id,250,250);
         } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
-        return image;
+        result.setOrder(orders);
+        result.setImage(image);
+        return result;
     }
 
-    @PostMapping(value = "/order/read",consumes = {"multipart/form-data" })
-    public String readUser(@RequestBody() MultipartFile file) throws IOException {
+    @PostMapping(value = "/read",consumes = {"multipart/form-data" })
+    public String readOrder(@RequestBody() MultipartFile file) throws IOException {
         String id = qrCodeService.readQRCode(file.getBytes());
-        Orders user= orderService.getUserName(id);
-        return "Order Number : " + user.getOrderNumber() + " Email : " + user.getEmail() + " ! " ;
+        Orders order= orderService.getUserName(id);
+        return "Order Number : " + order.getOrderNumber() + " Email : " + order.getEmail() + " ! " ;
     }
 
     @GetMapping(value = "/pass/{passcode}/orders/{orderId}")
-    public String getUserQRCode(@PathVariable String passcode, @PathVariable String orderId){
+    public EmailResponse getStatus(@PathVariable String passcode, @PathVariable String orderId){
         if(!passcode.equals(this.pass)){
-            return "Saisie le bon passcode!";
+            return new EmailResponse();
         }
         Orders orders = orderService.findById(orderId);
         orders.updateState();
-        emailService.sendSimpleMail(new EmailDetails(orders.getEmail(),orders.getState(),"",""));
-        return orderService.update(orders).getState();
-
+        emailService.sendSimpleMail(new EmailDetails(orders.getEmail(),orders.getEmailBody(),"État de votre commande : "+orders.getOrderNumber(),""));
+        Orders updated = orderService.update(orders);
+        return new EmailResponse(updated.getState(),updated.getEmail());
+    }
+    @GetMapping("/allOrders")
+    public List<Orders> getAllLists(){
+        return orderService.findAll();
     }
 }

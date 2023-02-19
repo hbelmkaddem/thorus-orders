@@ -5,6 +5,7 @@ import com.barcode.barcode.model.Orders;
 import com.barcode.barcode.service.OrderService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,5 +44,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Orders update(Orders orders) {
         return orderRepository.save(orders);
+    }
+
+    @Override
+    public List<Orders> findAll() {
+        return orderRepository.findAll();
     }
 }

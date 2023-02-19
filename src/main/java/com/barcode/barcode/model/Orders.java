@@ -30,4 +30,8 @@ public class Orders {
             default -> "";
         });
     }
+
+    public String getEmailBody() {
+        return "Nous vous informons que l'état de votre commande : " + getOrderNumber() +" devient " +getState();
+    }
 }
