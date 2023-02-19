@@ -1,7 +1,7 @@
 package com.barcode.barcode.Repository;
 
-import com.barcode.barcode.model.Order;
+import com.barcode.barcode.model.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends JpaRepository<Order,String> {
+public interface OrderRepository extends JpaRepository<Orders,String> {
 }

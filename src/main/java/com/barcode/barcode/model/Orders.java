@@ -13,15 +13,21 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Order {
+public class Orders {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
     private String orderNumber;
     private String email;
-    @ElementCollection(targetClass = StateEnum.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "order_state", joinColumns = @JoinColumn(name = "order_id"))
-    @Enumerated(EnumType.ORDINAL)
-    private StateEnum State;
+    private String State;
+
+    public void updateState() {
+        this.setState(switch (getState()){
+            case "Reception"-> StateEnum.Validation.name();
+            case "Validation"->StateEnum.préparation.name();
+            case "préparation","Acheminement"->StateEnum.Acheminement.name();
+            default -> "";
+        });
+    }
 }
