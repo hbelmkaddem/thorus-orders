@@ -71,11 +71,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>me.minidigger</groupId>
-			<artifactId>MiniMessage</artifactId>
-			<version>2.1.0</version>
-		</dependency>
 
 	</dependencies>
 
