@@ -43,10 +43,10 @@
 			  <version>1.18.22</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>1.5.7</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
