@@ -14,4 +14,8 @@ public interface OrderService {
     Orders update(Orders orders);
 
     List<Orders> findAll();
+
+    void delete(String id);
+
+    void updateState(Orders orders);
 }

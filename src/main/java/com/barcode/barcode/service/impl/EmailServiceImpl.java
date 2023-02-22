@@ -1,6 +1,7 @@
-package com.barcode.barcode.service;
+package com.barcode.barcode.service.impl;
 
 import com.barcode.barcode.model.EmailDetails;
+import com.barcode.barcode.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;

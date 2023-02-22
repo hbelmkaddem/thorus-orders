@@ -1,12 +1,12 @@
 package com.barcode.barcode.model;
 
-import com.barcode.barcode.enumeration.StateEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -18,20 +18,17 @@ public class Orders {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
-    private String orderNumber;
+    private String fullname;
     private String email;
-    private String State;
+    private String orderNumber;
 
-    public void updateState() {
-        this.setState(switch (getState()){
-            case "Reception"-> StateEnum.Validation.name();
-            case "Validation"->StateEnum.préparation.name();
-            case "préparation","Acheminement"->StateEnum.Acheminement.name();
-            default -> "";
-        });
-    }
+    private Date arrivalDate;
+    private Date shippingDate;
+    private Date updatedAt;
+    @OneToOne
+    private Etats State;
 
     public String getEmailBody() {
-        return "Nous vous informons que l'état de votre commande : " + getOrderNumber() +" devient " +getState();
+        return "Nous vous informons que l'état de votre commande : " + getOrderNumber() +" devient " + getState().getEtat();
     }
 }

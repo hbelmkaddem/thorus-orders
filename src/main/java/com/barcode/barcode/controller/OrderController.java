@@ -4,6 +4,7 @@ import com.barcode.barcode.model.EmailDetails;
 import com.barcode.barcode.model.EmailResponse;
 import com.barcode.barcode.model.Orders;
 import com.barcode.barcode.model.Results;
+import com.barcode.barcode.payload.UpdatePayload;
 import com.barcode.barcode.service.EmailService;
 import com.barcode.barcode.service.OrderService;
 import com.barcode.barcode.service.impl.QRCodeGenerator;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -55,19 +57,26 @@ public class OrderController {
         return "Order Number : " + order.getOrderNumber() + " Email : " + order.getEmail() + " ! " ;
     }
 
-    @GetMapping(value = "/pass/{passcode}/orders/{orderId}")
-    public EmailResponse getStatus(@PathVariable String passcode, @PathVariable String orderId){
-        if(!passcode.equals(this.pass)){
+    @PostMapping(value = "/update")
+    public EmailResponse getStatus(@RequestBody UpdatePayload payload){
+        if(!payload.getPasscode().equals(this.pass)){
             return new EmailResponse();
         }
-        Orders orders = orderService.findById(orderId);
-        orders.updateState();
+        Orders orders = orderService.findById(payload.getId());
+        ///orderService.updateState(orders);
+        orders.setState(payload.getEtats());
+        orders.setUpdatedAt(new Date());
         emailService.sendSimpleMail(new EmailDetails(orders.getEmail(),orders.getEmailBody(),"État de votre commande : "+orders.getOrderNumber(),""));
         Orders updated = orderService.update(orders);
-        return new EmailResponse(updated.getState(),updated.getEmail());
+        return new EmailResponse(updated.getState().getEtat(),updated.getEmail());
     }
     @GetMapping("/allOrders")
     public List<Orders> getAllLists(){
         return orderService.findAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable String id){
+        orderService.delete(id);
     }
 }

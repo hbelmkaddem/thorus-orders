@@ -2,19 +2,25 @@ package com.barcode.barcode.service.impl;
 
 import com.barcode.barcode.Repository.OrderRepository;
 import com.barcode.barcode.model.Orders;
+import com.barcode.barcode.model.Etats;
 import com.barcode.barcode.service.OrderService;
+import com.barcode.barcode.service.StateService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private StateService stateService;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, StateService stateService) {
         this.orderRepository = orderRepository;
+        this.stateService = stateService;
     }
 
     @Override
@@ -49,5 +55,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Orders> findAll() {
         return orderRepository.findAll();
+    }
+
+    @Override
+    public void delete(String id) {
+        orderRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateState(Orders orders) {
+        List<Etats> states= stateService.findAll();
+        List<Etats> orderedStates = states.stream().sorted(Comparator.comparing(Etats::getOrdre)).collect(Collectors.toList());
+        Optional<Etats> optionalState = orderedStates.stream().filter(state -> state.getEtat().equals(orders.getState().getEtat())).findFirst();
+        if(optionalState.isPresent()){
+            int index = orderedStates.indexOf(optionalState.get());
+            if(index<orderedStates.size()-1){
+                orders.setState(orderedStates.get(index+1));
+            }
+        }
     }
 }
