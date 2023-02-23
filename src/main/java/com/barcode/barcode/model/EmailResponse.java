@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class EmailResponse {
     private String state;
     private String email;
+    private boolean notify;
+    private String orderNumber;
 }

@@ -59,12 +59,12 @@ public class OrderController {
     @PostMapping(value = "/update")
     public EmailResponse getStatus(@RequestBody UpdatePayload payload){
         Orders orders = orderService.findById(payload.getId());
-        ///orderService.updateState(orders);
         orders.setState(payload.getEtats());
         orders.setUpdatedAt(new Date());
-        emailService.sendSimpleMail(new EmailDetails(orders.getEmail(),orders.getEmailBody(),"État de votre commande : "+orders.getOrderNumber(),""));
         Orders updated = orderService.update(orders);
-        return new EmailResponse(updated.getState().getEtat(),updated.getEmail());
+        if(orders.isNotify())
+            emailService.sendSimpleMail(new EmailDetails(updated.getEmail(),updated.getEmailBody(),"État de la commande : "+updated.getOrderNumber(),""));
+        return new EmailResponse(updated.getState().getEtat(),updated.getEmail(),updated.isNotify(),updated.getOrderNumber());
     }
     @GetMapping("/allOrders")
     public List<Orders> getAllLists(){
@@ -74,5 +74,20 @@ public class OrderController {
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable String id){
         orderService.delete(id);
+    }
+
+    @GetMapping(value = "/get-QrCode/{orderId}")
+    public Results getResultQRCode(@PathVariable String orderId ){
+        Results result=new Results();
+        Orders orders = orderService.findById(orderId);
+        byte[] image = new byte[0];
+        try {
+            image = QRCodeGenerator.getQRCodeImage(url+orderId,250,250);
+        } catch (WriterException | IOException e) {
+            e.printStackTrace();
+        }
+        result.setOrder(orders);
+        result.setImage(image);
+        return result;
     }
 }
