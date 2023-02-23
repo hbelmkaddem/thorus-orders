@@ -1,5 +1,6 @@
 package com.barcode.barcode.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,9 +22,11 @@ public class Orders {
     private String fullname;
     private String email;
     private String orderNumber;
-
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date arrivalDate;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date shippingDate;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date updatedAt;
     @OneToOne
     private Etats State;

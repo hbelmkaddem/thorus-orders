@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class UpdatePayload {
-    private String passcode;
     private Etats etats;
     private String id;
 }

@@ -24,8 +24,7 @@ public class OrderController {
     private final QRCodeServiceImpl qrCodeService;
     private final OrderService orderService;
     private final EmailService emailService;
-    @Value("${passcode}")
-    private String pass;
+
     @Value("${url}")
     private String url;
 
@@ -59,9 +58,6 @@ public class OrderController {
 
     @PostMapping(value = "/update")
     public EmailResponse getStatus(@RequestBody UpdatePayload payload){
-        if(!payload.getPasscode().equals(this.pass)){
-            return new EmailResponse();
-        }
         Orders orders = orderService.findById(payload.getId());
         ///orderService.updateState(orders);
         orders.setState(payload.getEtats());
