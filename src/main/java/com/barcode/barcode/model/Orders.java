@@ -21,12 +21,12 @@ public class Orders {
     private String id;
     private String fullname;
     private String email;
-    private String orderNumber;
-    @JsonFormat(pattern="dd-MM-yyyy")
+    private String orderNumber;    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR", timezone = "UTC")
     private Date arrivalDate;
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR", timezone = "UTC")
     private Date shippingDate;
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR", timezone = "UTC")
     private Date updatedAt;
 
     private String comment;
