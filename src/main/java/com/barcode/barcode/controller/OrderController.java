@@ -60,11 +60,12 @@ public class OrderController {
     public EmailResponse getStatus(@RequestBody Orders payload){
         Orders orders = orderService.findById(payload.getId());
         orders.setState(payload.getState());
+        orders.setNotify(payload.isNotify());
         if(!payload.getComment().isEmpty())
             orders.setComment(payload.getComment());
         orders.setUpdatedAt(new Date());
         Orders updated = orderService.update(orders);
-        if(orders.isNotify())
+        if(updated.isNotify())
             emailService.sendSimpleMail(new EmailDetails(updated.getEmail(),updated.getEmailBody(),"État de la commande : "+updated.getOrderNumber(),""));
         return new EmailResponse(updated.getState().getEtat(),updated.getEmail(),updated.isNotify(),updated.getOrderNumber());
     }
