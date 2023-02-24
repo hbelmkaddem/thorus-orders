@@ -57,9 +57,11 @@ public class OrderController {
     }
 
     @PostMapping(value = "/update")
-    public EmailResponse getStatus(@RequestBody UpdatePayload payload){
+    public EmailResponse getStatus(@RequestBody Orders payload){
         Orders orders = orderService.findById(payload.getId());
-        orders.setState(payload.getEtats());
+        orders.setState(payload.getState());
+        if(!payload.getComment().isEmpty())
+            orders.setComment(payload.getComment());
         orders.setUpdatedAt(new Date());
         Orders updated = orderService.update(orders);
         if(orders.isNotify())
@@ -89,5 +91,9 @@ public class OrderController {
         result.setOrder(orders);
         result.setImage(image);
         return result;
+    }
+    @GetMapping("/{id}")
+    public Orders findById(@PathVariable String id){
+        return orderService.findById(id);
     }
 }
