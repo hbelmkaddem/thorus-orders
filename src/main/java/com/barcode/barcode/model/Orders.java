@@ -22,11 +22,8 @@ public class Orders {
     private String fullname;
     private String email;
     private String orderNumber;
-    @JsonFormat(pattern="dd-MM-yyyy")
     private Date arrivalDate;
-    @JsonFormat(pattern="dd-MM-yyyy")
     private Date shippingDate;
-    @JsonFormat(pattern="dd-MM-yyyy")
     private Date updatedAt;
 
     private String comment;
