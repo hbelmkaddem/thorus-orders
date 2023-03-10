@@ -32,6 +32,17 @@ public class Orders {
     private Etats State;
 
     public String getEmailBody() {
-        return "Nous vous informons que l'état de la commande : " + getOrderNumber() +" est passé à " + getState().getEtat();
+        return "Bonjour !\n" +
+                "\n" +
+                "-Votre commande N° "+ getOrderNumber() +" passe en" + getState().getEtat() +
+                "                                                                                                                                                -Vous recevrez un mail très prochainement pour vous  informer de l'avancée  de votre commande.\n" +
+                "\n" +
+                "L’equipe Thorus \n" +
+                "\n" +
+                "Catalogue : https://thorus-wear.com/catalogue/\n" +
+                "\n" +
+                "Boutique : https://thorus-wear.com/fr/\n" +
+                "\n" +
+                "Insta : https://www.instagram.com/thorus_wear/";
     }
 }
