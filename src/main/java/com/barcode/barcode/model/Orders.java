@@ -34,10 +34,9 @@ public class Orders {
     public String getEmailBody() {
         return "Bonjour !\n" +
                 "\n" +
-                "-Votre commande N° "+ getOrderNumber() +" passe en" + getState().getEtat() +
-                "                                                                                                                                                -Vous recevrez un mail très prochainement pour vous  informer de l'avancée  de votre commande.\n" +
+                "Votre commande N° "+ getOrderNumber() +" passe en " + getState().getEtat() +
                 "\n" +
-                "L’equipe Thorus \n" +
+                "L’équipe Thorus \n" +
                 "\n" +
                 "Catalogue : https://thorus-wear.com/catalogue/\n" +
                 "\n" +
