@@ -36,6 +36,7 @@ public class Orders {
                 "\n" +
                 "Votre commande N° "+ getOrderNumber() +" passe en " + getState().getEtat() +
                 "\n" +
+                "Vous recevrez un mail très prochainement pour vous  informer de l'avancée  de votre commande.\n" +
                 "L’équipe Thorus \n" +
                 "\n" +
                 "Catalogue : https://thorus-wear.com/catalogue/\n" +
