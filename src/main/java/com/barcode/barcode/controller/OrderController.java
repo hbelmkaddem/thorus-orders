@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,9 @@ public class OrderController {
     }
     @GetMapping("/allOrders")
     public List<Orders> getAllLists(){
-        return orderService.findAll();
+        List<Orders> all = orderService.findAll();
+        Collections.sort(all);
+        return all;
     }
 
     @DeleteMapping("/delete/{id}")

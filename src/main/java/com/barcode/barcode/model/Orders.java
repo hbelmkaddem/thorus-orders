@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Orders {
+public class Orders implements Comparable<Orders> {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -44,5 +44,10 @@ public class Orders {
                 "Boutique : https://thorus-wear.com/fr/\n" +
                 "\n" +
                 "Insta : https://www.instagram.com/thorus_wear/";
+    }
+
+    @Override
+    public int compareTo(Orders o) {
+        return getShippingDate().compareTo(o.getShippingDate());
     }
 }
